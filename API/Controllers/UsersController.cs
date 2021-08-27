@@ -4,18 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 //Using MVC (model, view controller -> ControllerBase)
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    //Type of Controller
-    [ApiController]
-    //way to controller; in this case: localhost:5000/api
-    [Route("api/[controller]")]
-    //constructor for this controller
-    public class UsersController : ControllerBase
+    //constructor for this controller, inherit from baseApiController
+    public class UsersController : BaseApiController
     {
         private readonly DataContext _context;
         public UsersController(DataContext context)
@@ -33,6 +30,8 @@ namespace API.Controllers
             return await _context.Users.ToListAsync();
         }
 
+        //ask for authorizations
+        [Authorize]
         //HTTP Function to get specific User, takes Parameter id. Call: localhost:5000/api/users/1
         [HttpGet("{id}")]
         //Takes not the attribute int id, no IEnumerable now, it's not a list

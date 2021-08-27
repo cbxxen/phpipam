@@ -6,5 +6,9 @@ namespace API.Entities
         public int Id { get; set; }
         //Username String
         public string UserName {get; set;}
+
+        //For Password Use
+        public byte[] PasswordHash { get; set;}
+        public byte[] PasswordSalt {get; set;}
     }
 }
