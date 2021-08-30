@@ -5,6 +5,8 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { AccountService } from '_services/account.service';
+import { User } from './_models/User';
 
 
 @Component({
@@ -17,20 +19,17 @@ export class AppComponent implements OnInit{
   users: any;
 
   //constroctur to define the http request, After construction 
-  constructor(private http: HttpClient){}
+  constructor(private AccountService: AccountService){}
 
   //Interface, bc implements OnInit and calls getUsers class
   ngOnInit() {
-    this.getUsers();
+    this.setCurrentUser();
   }
 
-  getUsers(){
-        //http GET request. Subsribe needed so the method does something
-        this.http.get("https://localhost:5001/api/users").subscribe(response => {
-          //safe response to user Var
-          this.users = response;
-        }, error => {
-          console.log(error);
-        });
+  setCurrentUser(){
+    //get User Object from browser and parse it to User Object
+    const user: User = JSON.parse(localStorage.getItem('user')!);
+    this.AccountService.setCurrentUser(user);
+
   }
 }
