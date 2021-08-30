@@ -36,7 +36,7 @@ export class AccountService {
   logout(){
     //remove user from Browser Storage
     localStorage.removeItem('user');
-    this.currentUserSource.next(undefined);
+    this.currentUserSource.next(null);
   }
   
   //method to register
