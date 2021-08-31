@@ -8,6 +8,8 @@ using API.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
+using API.Helper;
 
 namespace API.Extensions
 {
@@ -16,6 +18,10 @@ namespace API.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config){
              //Token Service AddScoped=after the service is used, it gets suspended again
             services.AddScoped<ITokenService, TokenService>();
+            //Service for Repository
+            services.AddScoped<IUserRepository, UserRepository>();
+            //Auto Mapper
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             //SQL Connection
             services.AddDbContext<DataContext>(options =>
             {

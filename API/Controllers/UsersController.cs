@@ -3,42 +3,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.DTOs;
 using API.Entities;
+using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-//Using MVC (model, view controller -> ControllerBase)
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    //to call any API function here, User must be logged in (authorized)
+    [Authorize]
     //constructor for this controller, inherit from baseApiController
     public class UsersController : BaseApiController
     {
-        private readonly DataContext _context;
-        public UsersController(DataContext context)
+        
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
+        public UsersController(IUserRepository userRepository, IMapper mapper)
         {
-            _context = context;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         //HTTP Function to return all Users
         [HttpGet]
         //returning type of ActionResult<IEnumerable<AppUser>>. IEnumerable is an easy way to get a List. More Advanced on would be List
         
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
         {
-            //calls DataContext.Users.get and brings it to a List
-            return await _context.Users.ToListAsync();
+            //Ok to return a Task<ActionResult>
+            return Ok(await _userRepository.GetMembersAsync());
         }
 
         //ask for authorizations
         [Authorize]
         //HTTP Function to get specific User, takes Parameter id. Call: localhost:5000/api/users/1
-        [HttpGet("{id}")]
+        [HttpGet("{username}")]
         //Takes not the attribute int id, no IEnumerable now, it's not a list
-        public async Task<ActionResult<AppUser>> GetUser(int id)
+        public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
-            //calls Datacontext in Users and uses Extensions function Find
-            return await _context.Users.FindAsync(id);
+            //calls _userRepository (UserRepository.cs and its interface)
+            return await _userRepository.GetMemberAsync(username);
         }
     }
 }
