@@ -1,6 +1,7 @@
 //using Class or File Data/DataContext.cs
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
@@ -18,7 +19,6 @@ namespace API.Controllers
     //constructor for this controller, inherit from baseApiController
     public class UsersController : BaseApiController
     {
-        
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         public UsersController(IUserRepository userRepository, IMapper mapper)
@@ -46,6 +46,24 @@ namespace API.Controllers
         {
             //calls _userRepository (UserRepository.cs and its interface)
             return await _userRepository.GetMemberAsync(username);
+        }
+        
+
+        //Function to update User
+        [HttpPut]
+        public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdates){
+            //Get Username of User (with Token)
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //Get User Object
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+            //Map memberUpdates (what has been changed) to user object
+            _mapper.Map(memberUpdates, user);
+            //call update Function
+            _userRepository.Update(user);
+            //If success return nothing
+            if(await _userRepository.SaveAllAsync()) return NoContent();
+            //if failed return Failed to update user
+            return BadRequest("Failed to update User");
         }
     }
 }

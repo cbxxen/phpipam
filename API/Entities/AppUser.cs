@@ -26,10 +26,5 @@ namespace API.Entities
         public string Country { get; set; }
         public ICollection<Photo> Photos {get; set;}
 
-        //get Age with the date of birth
-        //Get will automatically called if a Value is requested with the same name e.g. GetAge, GetCountry
-    //    public int GetAge(){
-    //        return DateOfBirth.CalculateAge();
-    //    }
     }
 }
