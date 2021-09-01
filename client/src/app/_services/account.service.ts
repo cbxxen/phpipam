@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import {map} from 'rxjs/operators'
 import { User } from 'src/app/_models/User';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -10,7 +11,7 @@ import { User } from 'src/app/_models/User';
   providedIn: 'root'
 })
 export class AccountService {
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
   
   //create Observable variable
   private currentUserSource = new ReplaySubject<User>(1);

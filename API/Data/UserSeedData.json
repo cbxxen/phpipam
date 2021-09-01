@@ -298,7 +298,7 @@
           "Country": "Guam",
           "Photos": [
             {
-              "url": "https://randomuser.me/api/portraits/male/45.jpg",
+              "url": "https://randomuser.me/api/portraits/men/45.jpg",
               "isMain": true
             }
           ]
@@ -317,7 +317,7 @@
           "Country": "East Timor",
           "Photos": [
             {
-              "url": "https://randomuser.me/api/portraits/male/42.jpg",
+              "url": "https://randomuser.me/api/portraits/men/42.jpg",
               "isMain": true
             }
           ]
@@ -336,7 +336,7 @@
           "Country": "Sao Tome and Principe",
           "Photos": [
             {
-              "url": "https://randomuser.me/api/portraits/male/22.jpg",
+              "url": "https://randomuser.me/api/portraits/men/22.jpg",
               "isMain": true
             }
           ]
@@ -355,7 +355,7 @@
           "Country": "Pakistan",
           "Photos": [
             {
-              "url": "https://randomuser.me/api/portraits/male/38.jpg",
+              "url": "https://randomuser.me/api/portraits/men/38.jpg",
               "isMain": true
             }
           ]
@@ -374,7 +374,7 @@
           "Country": "Bermuda",
           "Photos": [
             {
-              "url": "https://randomuser.me/api/portraits/male/29.jpg",
+              "url": "https://randomuser.me/api/portraits/men/29.jpg",
               "isMain": true
             }
           ]
