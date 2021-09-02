@@ -2,6 +2,7 @@
 The Class is used to Authenticate a User and give him a Token which he uses to authenticate in future
 */
 
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,7 +66,10 @@ namespace API.Controllers
         //api/account/login
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto){
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
+            var user = await _context.Users
+                //also save photos of Users to user var
+                .Include(p => p.Photos)
+                .SingleOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
             
             //if no sequence
             if (user == null) return Unauthorized("Invalid username");
@@ -84,7 +88,8 @@ namespace API.Controllers
             //Return DTO with username and Token fields
             return new UserDto{
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                photoUrl = user.Photos.FirstOrDefault(x => x.isMain)?.url
             };
         }
 

@@ -16,7 +16,11 @@ namespace API.Extensions
     public static class ApplicationServiceExtensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config){
-             //Token Service AddScoped=after the service is used, it gets suspended again
+            //saving configuration in CloudinarySettings helper. Looks up values in appsettings.json (CloudinarySettings)
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+            //service to store and delete files in cloudinary
+            services.AddScoped<IPhotoService, PhotoService>();
+            //Token Service AddScoped=after the service is used, it gets suspended again
             services.AddScoped<ITokenService, TokenService>();
             //Service for Repository
             services.AddScoped<IUserRepository, UserRepository>();
