@@ -47,10 +47,10 @@ namespace API.Services
             return uploadResult;
         }
         //DeletionResult comes from Cloudinary 
-        public async Task<DeletionResult> DeletePhotoAsync(string publicId)
+        public async Task<DeletionResult> DeletePhotoAsync(string PublicId)
         {
             //prepare deletion Var
-            var deleteParams = new DeletionParams(publicId);
+            var deleteParams = new DeletionParams(PublicId);
             //delete file
             var result = await _cloudinary.DestroyAsync(deleteParams);
 

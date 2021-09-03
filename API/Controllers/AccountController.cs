@@ -10,6 +10,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,11 +20,13 @@ namespace API.Controllers
     {
         private readonly DataContext _context;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
         //_context gets defined to DataContext (Function to make changes in DB)
-        public AccountController(DataContext context, ITokenService tokenService)
+        public AccountController(DataContext context, ITokenService tokenService,IMapper mapper)
         {
             _context = context;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
 
@@ -38,18 +41,19 @@ namespace API.Controllers
            
            //check if Username is taken, return BadRequest if exists
            if(await UserExists(registereDto.Username)) return BadRequest("Username is taken");
+
+            var user = _mapper.Map<AppUser>(registereDto);
+
             //"using" gurantees that the data is disposed/deleted after usage of class (HMACSHA512)
             //initializing the Hash Function object
             using var hmac = new HMACSHA512();
 
-            //define new AppUser
-            var user = new AppUser
-            {
-                UserName= registereDto.Username.ToLower(),
-                //Create Hash From PW (HMACSHA512 auto greates a random key)
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registereDto.Password)),
-                PasswordSalt = hmac.Key
-            };
+            
+            user.UserName= registereDto.Username.ToLower();
+            //Create Hash From PW (HMACSHA512 auto greates a random key)
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registereDto.Password));
+            user.PasswordSalt = hmac.Key;
+
             //enables tracking in context
             _context.Users.Add(user);
             //calling db and save user async
@@ -58,7 +62,8 @@ namespace API.Controllers
             //Return DTO with username and Token fields
             return new UserDto{
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs
             };
         }
 
@@ -89,7 +94,8 @@ namespace API.Controllers
             return new UserDto{
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
-                photoUrl = user.Photos.FirstOrDefault(x => x.isMain)?.url
+                photoUrl = user.Photos.FirstOrDefault(x => x.isMain)?.url,
+                KnownAs = user.KnownAs
             };
         }
 
