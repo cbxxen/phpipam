@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Helper;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -31,11 +33,25 @@ namespace API.Data
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+        //get members, including filtering
+        public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
-            return await _context.Users
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            //create Query for PagedList; AsQeryable() = allows to filter by
+           var query = _context.Users.AsQueryable();
+            //do not return own user query
+            query = query.Where(u => u.UserName != userParams.CurrentUsername);
+            //do not return same gender/gender set by user
+            query = query.Where(U => U.Gender == userParams.Gender);     
+
+            //set min age 
+            var minDob = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+            //set max age
+            var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
+            //query to filter out users not in age range
+            query = query.Where(x => x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
+
+            //return paged List. sends query to MemberDto(Mapping it to MemberDto)
+            return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).AsNoTracking(), userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)

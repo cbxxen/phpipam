@@ -7,6 +7,14 @@ import {TabsModule} from 'ngx-bootstrap/tabs'
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { MatSliderModule } from '@angular/material/slider';
+import {MaterialModules} from './Material.module.ts'; 
+
+
+
+
+
 
 @NgModule({
   declarations: [],
@@ -20,6 +28,9 @@ import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
     NgxGalleryModule,
     FileUploadModule,
     BsDatepickerModule.forRoot(),
+    PaginationModule.forRoot(), 
+    MatSliderModule,
+    MaterialModules,
   ],
   exports: [
     BsDropdownModule,
@@ -28,6 +39,9 @@ import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
     NgxGalleryModule,
     FileUploadModule,
     BsDatepickerModule,
+    PaginationModule,
+    MatSliderModule,
+    MaterialModules
   ]
 })
 export class SharedModule { }

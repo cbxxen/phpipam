@@ -27,7 +27,6 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
 import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { DateInputComponent } from './_forms/date-input/date-input.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,7 +55,8 @@ import { DateInputComponent } from './_forms/date-input/date-input.component';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+  
   ],
   providers: [
     //Interceptor for error codes
@@ -65,6 +65,8 @@ import { DateInputComponent } from './_forms/date-input/date-input.component';
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     //Loading Interceptor
     {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
+    //mat-Form-Fields
+
   ],
   bootstrap: [AppComponent]
 })
